@@ -1,0 +1,20 @@
+.smallscreenshow {
+     display: block;
+ }
+
+
+.smallscreenhide {
+    display: none;
+}
+
+.ui-btn-inner {
+    font-size: 11px;
+}
+
+.ui-li-divider {
+    display:none;
+ }
+
+.timestamp_placeholder {
+    font-size: 10px;
+}

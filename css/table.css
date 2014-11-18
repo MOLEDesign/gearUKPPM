@@ -1,10 +1,10 @@
 table a:link {
-	color: #000;
+	color: #666;
 	font-weight: bold;
 	text-decoration:none;
 }
 table a:visited {
-	color: #000;
+	color: #999999;
 	font-weight:bold;
 	text-decoration:none;
 }
@@ -14,11 +14,11 @@ table a:hover {
 	text-decoration:underline;
 }
 table {
-	color:#000;
-	font-size:0.95em;
-	text-shadow: 1px 1px 0px #fff;
+	font-family:Raleway, sans-serif;
+	color:#666;
+	font-size:1.0em;
 	background:#eaebec;
-	margin:1px;
+	margin:5px;
 	border:#ccc 1px solid;
 
 	-moz-border-radius:3px;
@@ -30,10 +30,7 @@ table {
 	box-shadow: 0 1px 2px #d1d1d1;
 }
 table th {
-	font-family: 'source_sans_prosemibold';
-	font-size:1.1em;
-	font-weight:500;
-	padding:1px 1px 1px 1px;
+	padding:5px 5px 5px 5px;
 	border-top:1px solid #fafafa;
 	border-bottom:1px solid #e0e0e0;
 
@@ -69,8 +66,11 @@ table td {
 	border-top: 1px solid #ffffff;
 	border-bottom:1px solid #e0e0e0;
 	border-left: 1px solid #e0e0e0;
-}
 
+	/* background: #fafafa;
+	background: -webkit-gradient(linear, left top, left bottom, from(#fbfbfb), to(#fafafa));
+	background: -moz-linear-gradient(top,  #fbfbfb,  #fafafa); */
+}
 table tr.even td {
 	background: #f6f6f6;
 	background: -webkit-gradient(linear, left top, left bottom, from(#f8f8f8), to(#f6f6f6));
@@ -88,4 +88,39 @@ table tr:last-child td:last-child {
 	-moz-border-radius-bottomright:3px;
 	-webkit-border-bottom-right-radius:3px;
 	border-bottom-right-radius:3px;
+}
+/* table tr:hover td {
+	background: #f2f2f2;
+	background: -webkit-gradient(linear, left top, left bottom, from(#f2f2f2), to(#f0f0f0));
+	background: -moz-linear-gradient(top,  #f2f2f2,  #f0f0f0);	
+} */
+
+.cellgreen {
+    background-color:#0F0;
+    color:#000;
+}
+
+.cellred {
+    background-color:#F00;
+    color:#FFF;
+}
+
+.cellyellow {
+    background-color:#FF0;
+    color:#000;
+}
+
+
+
+@media all and (min-width: 960px){
+    .landscapeonly {
+        display: table-cell;
+    }
+
+}
+
+@media all and (max-width: 950px){
+    .landscapeonly {
+        display:none;
+    }
 }

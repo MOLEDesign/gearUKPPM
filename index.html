@@ -1,95 +1,618 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
-		<meta name="apple-mobile-web-app-capable" content="yes">
-		<meta name="apple-mobile-web-app-status-bar-style" content="black">
-		
-		<!-- Refresh every 1 min -->
-        <script language="javascript" type="text/javascript">
-            <!--
-            window.setTimeout('window.location="operator.html"; ',60000);
-            // -->
-        </script>
-		
-		<title>UK PPM Viewer</title>
-		
-		<!-- define fonts -->
-		<link rel="stylesheet" href="assets/css/sourcesansproreg.css" type="text/css" charset="utf-8" />
-		<link rel="stylesheet" href="assets/css/sourcesansprosemibold.css" type="text/css" charset="utf-8" />
-		
-		<!-- site wide css -->
-		<link rel="stylesheet" href="assets/css/site.css" />
-		
-		<!-- table specific css -->
-		<link rel="stylesheet" href="assets/css/table.css" />
-		
-		<!-- define scripts -->
-		<!-- use local version of JQuery -->
-		<script src="assets/js/jquery-1.9.1.min.js"></script>
-		
-		<!-- custom scripts -->
-		<script src="assets/js/functions.js"></script>
-		<script src="assets/js/summary.js"></script>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="blue">
+    <meta name="apple-mobile-web-app-title" content="UK PPM">
 
-        <link href="assets/images/apple-touch-icon.png" rel="apple-touch-icon">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png"/>
 
-        <link rel="apple-touch-startup-image" href="assets/images/template/startup_landscape.jpg" media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:landscape)" />
-        <link rel="apple-touch-startup-image" href="assets/images/template/startup_portrait.jpg" media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:portrait)" />
-        <link rel="apple-touch-startup-image" href="assets/images/template/startup_landscape.jpg" media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:landscape) and (-webkit-min-device-pixel-ratio: 2)" />
+    <title>UK PPM Viewer</title>
 
-        <!-- Add to home -->
-        <link rel="stylesheet" href="assets/css/add2home.css">
+    <link href="css/codiqa.ext.min.css" rel="stylesheet">
+    <link href="css/jquery.mobile.theme-1.3.1.min.css" rel="stylesheet">
+    <link href="css/jquery.mobile.structure-1.3.1.min.css" rel="stylesheet">
+    <link href="css/table.css" rel="stylesheet">
+    <link href="css/jqm-neue.css" rel="stylesheet">
 
-        <script type="text/javascript">
-            var addToHomeConfig = {
-                animationIn: 'bubble',
-                animationOut: 'drop',
-                lifespan:10000,
-                expire:2,
-                touchIcon:true,
-                message:'Access PPM data easily on your <strong>%device</strong> by adding to your homescreen`.'
-            };
-        </script>
+    <script src="js/jquery-1.9.1.min.js"></script>
+    <script src="js/jquery.mobile-1.3.1.min.js"></script>
+    <script src="js/codiqa.ext.min.js"></script>
+    <script src="js/datafeeds.js"></script>
 
-        <script type="application/javascript" src="assets/js/add2home.js"></script>
+    <!-- Define local storage -->
+    <script src="js/storage.js"></script>
 
-        <style type="text/css">
-            #warning-message { display: none; }
-            @media only screen and (orientation:portrait){
-                #wrapper { display:none; }
-                #warning-message { display:block; }
-            }
-            @media only screen and (orientation:landscape){
-                #warning-message { display:none; }
-            }
-        </style>
-		
-	</head>
+    <!-- Styling for smaller screens -->
+    <link type="text/css" href="css/smallscreen.css" rel="stylesheet" media="all and (max-height: 360px)"/>
 
-	<body>
-    <div id="wrapper">
-	<span class="siteheading"><div id="timestamp_placeholder"></div></span>
-		
-		<!-- define placeholder, JQuery will load content into this div -->
-		<div id="placeholder1"></div>
-		<p></p>
-		<div id="placeholder2"></div>
-		
-		<p></p>
-		<div id="placeholder3"></div>
-		<p></p>
-		<div id="placeholder4"></div>
+    <script>
+        $(window).load(function () {
+            $("#server").attr("placeholder", db_server.getItem('server'));
+            $("#server").attr("value", db_server.server);
+        });
+    </script>
+
+</head>
+<body>
+
+<!-- FGW / National Summary screen -->
+<div data-role="page" data-control-title="Home" id="page1">
+    <div data-role="panel" id="settings_panel" data-position="left" data-display="reveal" data-theme="a">
+        <ul data-role="listview" data-divider-theme="b" data-inset="false">
+            <li data-role="list-divider" role="heading">
+                Screens
+            </li>
+            <li data-theme="a">
+                    National / FGW Summary
+            </li>
+            <li data-theme="a">
+                <a href="#page5" data-transition="none">
+                    National Detail
+                </a>
+            </li>
+            <li data-theme="a">
+                <a href="#page6" data-transition="none">
+                    FGW Detail
+                </a>
+            </li>
+            <li data-theme="a">
+                <a href="#page7" data-transition="none">
+                    Operator Summary
+                </a>
+            </li>
+            <li data-role="list-divider" role="heading">
+                Settings
+            </li>
+            <li data-theme="a">
+                <a href="#page8" data-transition="none">
+                    Dataserver
+                </a>
+            </li>
+            <li data-theme="a">
+                <a href="#page9" data-transition="none">
+                    Information
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div data-theme="b" data-role="header" data-position="fixed">
+        <a data-role="button" href="javascript:window.location.reload()" data-icon="refresh"
+           data-iconpos="left" class="ui-btn-right global_button">
+            Refresh
+        </a>
+        <a id="menu_panel" data-controltype="panelbutton" data-role="button" href="#settings_panel" data-icon="grid" data-iconpos="left" class="ui-btn-left global_button">
+            Menu
+        </a>
+
+        <h3>
+            Summary
+        </h3>
     </div>
 
-    <div id="warning-message" style="text-align: center">
-        <p><img src="assets/images/apple-touch-icon.png"></p>
 
-        <p style="font-family: source_sans_prosemibold;">The PPM Viewer only works in Landscape mode. Please rotate your
-            device.</p>
+    <div data-role="content" style="padding: 2%">
+
+        <div data-controltype="textblock">
+            <div class="timestamp_placeholder"></div>
+        </div>
+        <div data-role="collapsible-set" data-theme="b" data-content-theme="b">
+            <div data-role="collapsible" data-collapsed="false">
+                <h3>
+                    FGW PPM
+                </h3>
+
+                <div data-controltype="textblock">
+                    <div id="fgwdetail"></div>
+                </div>
+            </div>
+            <div data-role="collapsible">
+                <h3>
+                    Train Totals
+                </h3>
+
+                <div id="ppm_details" data-controltype="textblock">
+                    <div id="fgwsumtrains"></div>
+                </div>
+            </div>
+        </div>
+        <div data-role="collapsible-set" data-theme="b" data-content-theme="b">
+            <div data-role="collapsible" data-collapsed="false">
+                <h3>
+                    National PPM
+                </h3>
+
+                <div data-controltype="textblock">
+                    <div id="natsum"></div>
+                </div>
+            </div>
+            <div data-role="collapsible">
+                <h3>
+                    Train Totals
+                </h3>
+
+                <div data-controltype="textblock">
+                    <b>
+                        <div id="natsumtrains"></div>
+                    </b>
+                </div>
+            </div>
+        </div>
+
+        <div data-role="collapsible-set" data-theme="b" data-content-theme="b">
+            <div data-role="collapsible" data-collapsed="false">
+                <h3>
+                    NR Messages
+                </h3>
+
+                <div data-controltype="textblock">
+                    <div class="nrmessage"></div>
+                </div>
+            </div>
+        </div>
+
+
+
     </div>
-		
-	</body>
+</div>
 
+<div data-role="page" data-control-title="National Detail" id="page5">
+    <div data-role="panel" id="panel9" data-position="left" data-display="reveal"
+         data-theme="a">
+        <ul data-role="listview" data-divider-theme="b" data-inset="false">
+            <li data-role="list-divider" role="heading">
+                Screens
+            </li>
+            <li data-theme="a">
+                <a href="#page1" data-transition="none">
+                    National / FGW Summary
+                </a>
+            </li>
+            <li data-theme="a">
+                    National Detail
+            </li>
+            <li data-theme="a">
+                <a href="#page6" data-transition="none">
+                    FGW Detail
+                </a>
+            </li>
+            <li data-theme="a">
+                <a href="#page7" data-transition="none">
+                    Operator Summary
+                </a>
+            </li>
+            <li data-role="list-divider" role="heading">
+                Settings
+            </li>
+            <li data-theme="a">
+                <a href="#page8" data-transition="none">
+                    Dataserver
+                </a>
+            </li>
+            <li data-theme="a">
+                <a href="#page9" data-transition="none">
+                    Information
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div data-theme="b" data-role="header" data-position="fixed" class="global_topbar">
+        <a data-role="button" href="javascript:window.location.reload()" data-icon="refresh"
+           data-iconpos="left" class="ui-btn-right global_button">
+            Refresh
+        </a>
+        <a id="menu_panel" data-controltype="panelbutton" data-role="button" href="#panel9" data-icon="grid"
+           data-iconpos="left" class="ui-btn-left global_button">
+            Menu
+        </a>
+
+        <h3 id="home_header" class="global_header">
+            National Detail
+        </h3>
+    </div>
+
+    <div data-role="content" style="padding: 2%">
+        <div data-controltype="textblock">
+            <div id="timestamp_placeholder"></div>
+        </div>
+        <div data-controltype="textblock">
+            <div id="natdetail"></div>
+        </div>
+    </div>
+</div>
+
+<div data-role="page" data-control-title="FGW Detail" id="page6">
+    <div data-role="panel" id="panel12" data-position="left" data-display="reveal"
+         data-theme="a">
+        <ul data-role="listview" data-divider-theme="b" data-inset="false">
+            <li data-role="list-divider" role="heading">
+                Screens
+            </li>
+            <li data-theme="a">
+                <a href="#page1" data-transition="none">
+                    National / FGW Summary
+                </a>
+            </li>
+            <li data-theme="a">
+                <a href="#page5" data-transition="none">
+                    National Detail
+                </a>
+            </li>
+            <li data-theme="a">
+                    FGW Detail
+            </li>
+            <li data-theme="a">
+                <a href="#page7" data-transition="none">
+                    Operator Summary
+                </a>
+            </li>
+            <li data-role="list-divider" role="heading">
+                Settings
+            </li>
+            <li data-theme="a">
+                <a href="#page8" data-transition="none">
+                    Dataserver
+                </a>
+            </li>
+            <li data-theme="a">
+                <a href="#page9" data-transition="none">
+                    Information
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div data-theme="b" data-role="header" data-position="fixed" class="global_topbar">
+        <a data-role="button" href="javascript:window.location.reload()" data-icon="refresh"
+           data-iconpos="left" class="ui-btn-right global_button">
+            Refresh
+        </a>
+        <a id="menu_panel" data-controltype="panelbutton" data-role="button" href="#panel12" data-icon="grid"
+           data-iconpos="left" class="ui-btn-left global_button">
+            Menu
+        </a>
+
+        <h3 id="home_header" class="global_header">
+            FGW Detail
+        </h3>
+    </div>
+
+
+    <div data-role="content" style="padding: 2%">
+        <div data-controltype="textblock">
+            <div id="timestamp_placeholder"></div>
+        </div>
+        <div data-controltype="textblock">
+            <div id="opplaceholder2"></div>
+        </div>
+    </div>
+</div>
+
+<div data-role="page" data-control-title="Operator Summary" id="page7">
+    <div data-role="panel" id="panel16" data-position="left" data-display="reveal"
+         data-theme="a">
+        <ul data-role="listview" data-divider-theme="b" data-inset="false">
+            <li data-role="list-divider" role="heading">
+                Screens
+            </li>
+            <li data-theme="a">
+                <a href="#page1" data-transition="none">
+                    National / FGW Summary
+                </a>
+            </li>
+            <li data-theme="a">
+                <a href="#page5" data-transition="none">
+                    National Detail
+                </a>
+            </li>
+            <li data-theme="a">
+                <a href="#page6" data-transition="none">
+                    FGW Detail
+                </a>
+            </li>
+            <li data-theme="a">
+                    Operator Summary
+            </li>
+            <li data-role="list-divider" role="heading">
+                Settings
+            </li>
+            <li data-theme="a">
+                <a href="#page8" data-transition="none">
+                    Dataserver
+                </a>
+            </li>
+            <li data-theme="a">
+                <a href="#page9" data-transition="none">
+                    Information
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div data-theme="b" data-role="header" data-position="fixed" class="global_topbar">
+        <a data-role="button" href="javascript:window.location.reload()" data-icon="refresh"
+           data-iconpos="left" class="ui-btn-right global_button">
+            Refresh
+        </a>
+        <a id="menu_panel" data-controltype="panelbutton" data-role="button" href="#panel16" data-icon="grid"
+           data-iconpos="left" class="ui-btn-left global_button">
+            Menu
+        </a>
+
+        <h3 id="home_header" class="global_header">
+            All Operators
+        </h3>
+    </div>
+
+    <div data-role="content" style="padding: 2%">
+        <div data-controltype="textblock">
+            <div id="timestamp_placeholder"></div>
+        </div>
+        <div data-controltype="textblock">
+            <div id="placeholder1"></div>
+        </div>
+    </div>
+</div>
+
+<div data-role="page" data-control-title="Dataserver" id="page8">
+    <div data-role="panel" id="panel21" data-position="left" data-display="reveal"
+         data-theme="a">
+        <ul data-role="listview" data-divider-theme="b" data-inset="false">
+            <li data-role="list-divider" role="heading">
+                Screens
+            </li>
+            <li data-theme="a">
+                <a href="#page1" data-transition="none">
+                    National / FGW Summary
+                </a>
+            </li>
+            <li data-theme="a">
+                <a href="#page5" data-transition="none">
+                    National Detail
+                </a>
+            </li>
+            <li data-theme="a">
+                <a href="#page6" data-transition="none">
+                    FGW Detail
+                </a>
+            </li>
+            <li data-theme="a">
+                <a href="#page7" data-transition="none">
+                    Operator Summary
+                </a>
+            </li>
+            <li data-role="list-divider" role="heading">
+                Settings
+            </li>
+            <li data-theme="a">
+                    Dataserver
+            </li>
+            <li data-theme="a">
+                <a href="#page9" data-transition="none">
+                    Information
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div data-theme="b" data-role="header" data-position="fixed" class="global_topbar">
+
+        <a id="menu_panel" data-controltype="panelbutton" data-role="button" href="#panel21" data-icon="grid"
+           data-iconpos="left" class="ui-btn-left global_button">
+            Menu
+        </a>
+
+        <h3 id="home_header" class="global_header">
+            Dataserver Settings
+        </h3>
+    </div>
+    <div data-role="content" data-theme="b" style="padding: 2%">
+        <div data-controltype="textblock">
+            <b>
+                Please do not make any changes on this page without consulting the FGW IT Department.
+            </b>
+        </div>
+
+        <form id="serversettings" action="" method="POST">
+            <div data-role="fieldcontain" data-controltype="textinput">
+                <label for="server">
+                    Posting Server
+                </label>
+                <input name="server" id="server" placeholder="" value="" type="text" data-mini="true">
+            </div>
+            <input id="store_dataserver" type="submit" data-icon="plus" data-iconpos="left" value="Confirm Posting Server" class="global_button" onclick="javascript:dbGoServer()">
+
+        </form>
+    </div>
+</div>
+
+<div data-role="page" data-control-title="Information" id="page9">
+    <div data-role="panel" id="panel25" data-position="left" data-display="reveal"
+         data-theme="a">
+        <ul data-role="listview" data-divider-theme="b" data-inset="false">
+            <li data-role="list-divider" role="heading">
+                Screens
+            </li>
+            <li data-theme="a">
+                <a href="#page1" data-transition="none">
+                    National / FGW Summary
+                </a>
+            </li>
+            <li data-theme="a">
+                <a href="#page5" data-transition="none">
+                    National Detail
+                </a>
+            </li>
+            <li data-theme="a">
+                <a href="#page6" data-transition="none">
+                    FGW Detail
+                </a>
+            </li>
+            <li data-theme="a">
+                <a href="#page7" data-transition="none">
+                    Operator Summary
+                </a>
+            </li>
+            <li data-role="list-divider" role="heading">
+                Settings
+            </li>
+            <li data-theme="a">
+                <a href="#page8" data-transition="none">
+                    Dataserver
+                </a>
+            </li>
+            <li data-theme="a">
+                    Information
+            </li>
+        </ul>
+    </div>
+    <div data-theme="b" data-role="header" data-position="fixed" class="global_topbar">
+
+        <a id="menu_panel" data-controltype="panelbutton" data-role="button" href="#panel25" data-icon="grid"
+           data-iconpos="left" class="ui-btn-left global_button">
+            Menu
+        </a>
+
+        <h3 id="home_header" class="global_header">
+            Dataserver Settings
+        </h3>
+    </div>
+    <div data-role="content" style="padding: 2%">
+        <div data-role="collapsible-set" data-theme="b" data-content-theme="b">
+            <div data-role="collapsible" data-collapsed="false">
+                <h3>
+                    Help
+                </h3>
+
+                <div data-controltype="textblock">
+                    <p>
+                        <b>Reading PPM Data</b>
+
+                    <table cellspacing="0" width="99%">
+                        <tr>
+                            <td>The Public Performance Measure shows the performance of trains against the timetable,
+                                measured as the percentage of trains arriving at destination 'on time'.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Press the Refresh button in top right hand corner on data screens to refresh the data</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    </p>
+                    <p>
+                        <b>
+                            National Section
+                        </b>
+                    <table cellspacing="0" width="99%">
+                        <tr>
+                            <td>This contains the national PPM broken down by sector, and a summary of the UK in
+                                general.
+                            </td>
+                        </tr>
+                    </table>
+                    </p>
+                    <p>
+                        <b>
+                            By Operator Section
+                        </b>
+                    <table cellspacing="0" width="99%">
+                        <tr>
+                            <td>A breakdown of each individual TOC's performance</td>
+                        </tr>
+                    </table>
+
+                    </p>
+                    <p>
+                        <b>
+                            First Great Western Section
+                        </b>
+                    <table cellspacing="0" width="99%">
+                        <tr>
+                            <td>A breakdown of FGW and its separate areas</td>
+                        </tr>
+                    </table>
+                    </p>
+                    <p>
+                        <b>
+                            NR Message Section
+                        </b>
+
+                    <table cellspacing="0" width="99%">
+                        <tr>
+                            <td>Urgent messages from Network Rail</td>
+                        </tr>
+                    </table>
+                    </p>
+                    <p>
+                        <b>
+                            Known Issues
+                        </b>
+
+                    <table cellspacing="0" width="99%">
+                        <tr>
+                            <td>
+                                <ul>
+                                    <li>Speed needs optimising</li>
+                                    <li>Color missing from National Summary</li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </table>
+                    </p>
+                </div>
+            </div>
+            <div data-role="collapsible">
+                <h3>
+                    About
+                </h3>
+
+                <div id="ppm_details" data-controltype="textblock">
+                    <h2>
+                        FGW PPM Datafeed
+                    </h2>
+
+                    <h2>
+                        Version 1.1.0
+                    </h2>
+
+                    <div>
+                        <p>
+                            <b>
+                                This application is based on open source code, with data from National
+                                Rail.
+                            </b>
+                        </p>
+
+                        <p>
+                            <b>
+                                No responsibility can be taken for inaccurate data supplied by National
+                                rail.
+                            </b>
+                        </p>
+
+                        <p>
+                            <b>
+                                Please report any problems with this application to
+                            </b>
+                        </p>
+
+                        <p>
+                            <a data-mce-href="mailto:fgw-it@firstgroup.com" href="mailto:fgw-it@firstgroup.com"
+                               style="">
+                                <b>
+                                    fgw-it@firstgroup.com
+                                </b>
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
 </html>

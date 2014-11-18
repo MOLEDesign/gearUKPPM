@@ -1,0 +1,25 @@
+.smallscreenshow {
+    display: none;
+}
+
+
+.smallscreenhide {
+    display: block;
+}
+
+@media all and (min-width: 960px){
+    .landscapeonly {
+        display: table-cell;
+    }
+
+}
+
+@media all and (max-width: 950px){
+    .landscapeonly {
+        display:none;
+    }
+}
+
+body {
+    text-shadow: none !important;
+}
