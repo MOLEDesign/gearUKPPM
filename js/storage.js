@@ -20,6 +20,7 @@ function getSessionStorage() {
 
 var db_user = getLocalStorage() || dispError('Local Storage not supported.');
 var db_server = getLocalStorage() || dispError('Local Storage not supported.');
+var db_ppm = getSessionStorage() || dispError('Session Storage not supported');
 
 var element = function(id) { return document.getElementById(id); }
 var errorMessage = undefined;

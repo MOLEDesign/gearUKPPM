@@ -25,15 +25,15 @@
 <widget 
 	xmlns="http://www.w3.org/ns/widgets"
 	xmlns:rim="http://www.blackberry.com/ns/widgets"
-	id="uk.co.gwtrains.ppmviewer"
-	version="1.3.0">
+	id="uk.co.gwtrains.gearppmviewer"
+	version="1.0.0">
 
     <preference name="phonegap-version" value="3.6.3" />
 
 	<name>UK PPM</name>
 	
 	<description>
-		An application viewing live PPM data
+		A Gear Application for viewing live PPM data
 	</description>
 	
 	<author href="http://railtracks.fgw.co.uk" email="fgw-it@firstgroup.com">
